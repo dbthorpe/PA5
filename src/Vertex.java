@@ -9,6 +9,7 @@ public class Vertex
 	private Vertex incomingVertex;
 	private int weight;
 	
+	//Make a vertex with no edges
 	public Vertex(String v)
 	{
 		name = v;
@@ -16,6 +17,7 @@ public class Vertex
 		incomingVertex = null;
 	}
 	
+	//Make a vertex with an edge
 	public Vertex(String toVertexName, Vertex fromVertex, int weight)
 	{
 		name = toVertexName;

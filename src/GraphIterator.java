@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class GraphIterator implements Iterator<Vertex>
 {
-
+	//Iterate over current linked list starting at vertex vert
 	Vertex vert;
 	
 	public GraphIterator(Vertex v)

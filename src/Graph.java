@@ -153,6 +153,7 @@ public class Graph
 		graph.addEdge("b","c",8);
 		graph.addEdge("b","d",10);
 		graph.addEdge("c","d",9);
+		graph.addEdge("b","a",2);
 		
 		System.out.println(graph);
 	}
