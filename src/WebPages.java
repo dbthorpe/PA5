@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.Scanner;
 public class WebPages
 {
-	//Instance variable for binary search tree of Terms
+	//Instance variable for the GRAPH? will probably need to change this
+	private Graph docGraph;
+	//Instance variable for hash table of Terms
 	private HashTable termIndex;
 	//instance variable for the number of pages read in
 	private int pageCount;
@@ -157,7 +159,7 @@ public class WebPages
 			// for each doc that contains term i
 			for(int i=0; i< temp.getDocFrequency(); i++){
 				// calculate tfidf and add to the docSpecific
-				tfidf = TFIDF(temp.getListOfFileNames().get(i), temp.getName());
+				tfidf = TFIDF(temp.getListOfFileNames().get(i), temp.getName()) * docGraph.inDegree(temp.getListOfFileNames().get(i));
 				if(!docList.contains(temp.getListOfFileNames().get(i))){
 					docList.add(temp.getListOfFileNames().get(i));
 					docSpecific.add((tfidf*tfidf));
