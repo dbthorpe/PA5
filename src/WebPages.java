@@ -4,10 +4,12 @@
 // Class: CS200
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 public class WebPages
 {
 	//Instance variable for the GRAPH? will probably need to change this
@@ -29,6 +31,9 @@ public class WebPages
 		{
 			//increment the pageCount
 			pageCount++;
+			
+			makeGraph(filename);
+			
 			//read line-by-line through the file to get words
 			Scanner readFile = new Scanner(new File(filename));
 			while(readFile.hasNextLine())
@@ -56,6 +61,29 @@ public class WebPages
 			System.out.println("Error: Unable to read file");
 		}
 	}
+	
+	private void makeGraph(String filename){
+		try {
+			Scanner doc = new Scanner(new File(filename));
+			Pattern p = Pattern.compile("<?a(\\W*)href=\"http:/(/)(.*)\">");
+			String temp = doc.findWithinHorizon(p,0);
+			while(temp != null){
+				//do stuff
+				 System.out.println(filename);
+				temp = temp.substring(temp.indexOf('/')+2, temp.indexOf('>')-1);
+				System.out.println(temp);
+				if(!temp.isEmpty()){
+					docGraph.addEdge(temp, filename, 1);
+				}
+				//advance temp
+			 temp = doc.findWithinHorizon(p,0);
+			
+			}
+			
+		} catch (FileNotFoundException e) {
+		}
+	}
+	
 	public void printDepth(String word)
 	{
 		//get term depth in binary tree
@@ -128,6 +156,10 @@ public class WebPages
 		}
 	}
 	public Object[] bestPages(String query){
+		// if there is no query, then return null
+		if(query.isEmpty()){
+			return null;
+		}
 		// iterator and supporting data structures
 		HashTableIterator iter = new HashTableIterator(termIndex);
 		ArrayList<String> queryList = new ArrayList<String>();
@@ -159,7 +191,7 @@ public class WebPages
 			// for each doc that contains term i
 			for(int i=0; i< temp.getDocFrequency(); i++){
 				// calculate tfidf and add to the docSpecific
-				tfidf = TFIDF(temp.getListOfFileNames().get(i), temp.getName()) * docGraph.inDegree(temp.getListOfFileNames().get(i));
+				tfidf = TFIDF(temp.getListOfFileNames().get(i), temp.getName());// * docGraph.inDegree(temp.getListOfFileNames().get(i));
 				if(!docList.contains(temp.getListOfFileNames().get(i))){
 					docList.add(temp.getListOfFileNames().get(i));
 					docSpecific.add((tfidf*tfidf));
@@ -182,6 +214,7 @@ public class WebPages
 		// calculate the sim(d,q) for each document and store it
 		for(int i=0; i<docList.size(); i++){
 			double sim = common.get(i) / (Math.sqrt(docSpecific.get(i)) * Math.sqrt(queryWeights));
+			//sim *= docGraph.inDegree(docList.get(i));  *need to figureout the graph to try this*
 			simList.add(sim);
 			// if this sim is higher than previous highestSim, change index
 			if(sim > simList.get(highestSim))
