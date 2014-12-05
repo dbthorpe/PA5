@@ -144,8 +144,8 @@ public class Graph
 		
 	}
     
-	public static void main(String[] args)
-	{
+	/*public static void main(String[] args)
+	
 		Graph graph = new Graph();
 		
 		graph.addEdge("a","c",5);
@@ -156,7 +156,7 @@ public class Graph
 		graph.addEdge("b","a",2);
 		
 		System.out.println(graph);
-	}
+	}*/
 	
 	public String toString()
 	{

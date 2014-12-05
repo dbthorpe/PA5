@@ -64,6 +64,8 @@ public class WebPages
 	
 	private void makeGraph(String filename){
 		try {
+			
+			docGraph = new Graph();
 			Scanner doc = new Scanner(new File(filename));
 			Pattern p = Pattern.compile("<?a(\\W*)href=\"http:/(/)(.*)\">");
 			String temp = doc.findWithinHorizon(p,0);

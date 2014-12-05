@@ -27,6 +27,9 @@ public class PA5
 			//Read in the file
 			Scanner scanFile = new Scanner(new File(args[0]));
 			
+			//The name of the dot file to create in Graph class
+			String dotFileName = scanFile.next();
+			
 			//Read in the size of the hash table
 			size = scanFile.nextInt();
 			
