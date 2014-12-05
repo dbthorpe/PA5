@@ -58,7 +58,7 @@ public class Vertex
 		nextVertex.weight = nextWeight;
 	}
 	
-	//Two vertices are equal if their filename are the same
+	//Two vertices are equal if their filename are the same.
 	public boolean equals(Object other)
 	{
 		if(other instanceof Vertex)
