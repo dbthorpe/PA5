@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class WebPages
 {
 	//Instance variable for the GRAPH? will probably need to change this
-	private Graph docGraph;
+	private Graph docGraph = new Graph();
 	//Instance variable for hash table of Terms
 	private HashTable termIndex;
 	//instance variable for the number of pages read in
@@ -42,7 +42,7 @@ public class WebPages
 				String line = readFile.nextLine();
 				//remove HTML tags from the line
 				line = stripHTML(line);
-				//line = line.replaceAll("<", " ").replaceAll(">", " ");
+				line = line.replaceAll("<", " ").replaceAll(">", " ");
 				//delimit by everything but letters, numbers, ', and <>
 				Scanner readLine = new Scanner(line).useDelimiter("[^\\w'<>]+");
 				while(readLine.hasNext())
@@ -65,15 +65,12 @@ public class WebPages
 	private void makeGraph(String filename){
 		try {
 			
-			docGraph = new Graph();
 			Scanner doc = new Scanner(new File(filename));
 			Pattern p = Pattern.compile("<?a(\\W*)href=\"http:/(/)(.*)\">");
 			String temp = doc.findWithinHorizon(p,0);
 			while(temp != null){
 				//do stuff
-				 System.out.println(filename);
 				temp = temp.substring(temp.indexOf('/')+2, temp.indexOf('>')-1);
-				System.out.println(temp);
 				if(!temp.isEmpty()){
 					docGraph.addEdge(temp, filename, 1);
 				}
@@ -130,11 +127,8 @@ public class WebPages
 		//get the term for that word
 		Term term = termIndex.get(word, false);
 		float TF = (float) term.getTermFrequency(document);
-		//System.out.println("Word: " + word + " Document: " + document + " TF: " + TF);
 		float D = pageCount;
-		//System.out.println("Word: " + word + " Document: " + document + " D: " + D);
 		float DF = term.getDocFrequency();
-		//System.out.println("Word: " + word + " Document: " + document + " DF: " + DF);
 		return TF * Math.log(D / DF);
 	}
 	//whichPages method
@@ -193,7 +187,7 @@ public class WebPages
 			// for each doc that contains term i
 			for(int i=0; i< temp.getDocFrequency(); i++){
 				// calculate tfidf and add to the docSpecific
-				tfidf = TFIDF(temp.getListOfFileNames().get(i), temp.getName());// * docGraph.inDegree(temp.getListOfFileNames().get(i));
+				tfidf = TFIDF(temp.getListOfFileNames().get(i), temp.getName()); //* docGraph.inDegree(temp.getListOfFileNames().get(i));
 				if(!docList.contains(temp.getListOfFileNames().get(i))){
 					docList.add(temp.getListOfFileNames().get(i));
 					docSpecific.add((tfidf*tfidf));
@@ -216,7 +210,7 @@ public class WebPages
 		// calculate the sim(d,q) for each document and store it
 		for(int i=0; i<docList.size(); i++){
 			double sim = common.get(i) / (Math.sqrt(docSpecific.get(i)) * Math.sqrt(queryWeights));
-			//sim *= docGraph.inDegree(docList.get(i));  *need to figureout the graph to try this*
+			sim = sim * docGraph.inDegree(docList.get(i));
 			simList.add(sim);
 			// if this sim is higher than previous highestSim, change index
 			if(sim > simList.get(highestSim))
