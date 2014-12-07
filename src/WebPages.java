@@ -42,7 +42,7 @@ public class WebPages
 				String line = readFile.nextLine();
 				//remove HTML tags from the line
 				line = stripHTML(line);
-				//line = line.replaceAll("<", " ").replaceAll(">", " ");
+				line = line.replaceAll("<", " ").replaceAll(">", " ");
 				//delimit by everything but letters, numbers, ', and <>
 				Scanner readLine = new Scanner(line).useDelimiter("[^\\w'<>]+");
 				while(readLine.hasNext())
