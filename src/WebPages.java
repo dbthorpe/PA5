@@ -31,29 +31,30 @@ public class WebPages
 		{
 			//increment the pageCount
 			pageCount++;
-			
+
 			makeGraph(filename);
-			
+
 			//read line-by-line through the file to get words
 			Scanner readFile = new Scanner(new File(filename));
+			String fileString = "";
 			while(readFile.hasNextLine())
 			{
 				//read in a line
-				String line = readFile.nextLine();
-				//remove HTML tags from the line
-				line = stripHTML(line);
-				line = line.replaceAll("<", " ").replaceAll(">", " ");
-				//delimit by everything but letters, numbers, ', and <>
-				Scanner readLine = new Scanner(line).useDelimiter("[^\\w'<>]+");
-				while(readLine.hasNext())
-				{
-					//set the line to lowercase
-					String word = readLine.next().toLowerCase();
-					//add the word to the TermIndex
-					addToTermIndex(word, filename);
-				}
-				readLine.close();
+				fileString+= readFile.nextLine() + " ";
 			}
+			//remove HTML tags from the line
+			fileString = stripHTML(fileString);
+			fileString = fileString.replaceAll("<", " ").replaceAll(">", " ");
+			//delimit by everything but letters, numbers, ', and <>
+			Scanner readLine = new Scanner(fileString).useDelimiter("[^\\w'<>]+");
+			while(readLine.hasNext())
+			{
+				//set the line to lowercase
+				String word = readLine.next().toLowerCase();
+				//add the word to the TermIndex
+				addToTermIndex(word, filename);
+			}
+			readLine.close();
 			readFile.close();
 		}
 		catch(IOException e)
@@ -61,10 +62,9 @@ public class WebPages
 			System.out.println("Error: Unable to read file");
 		}
 	}
-	
+
 	private void makeGraph(String filename){
 		try {
-			
 			Scanner doc = new Scanner(new File(filename));
 			Pattern p = Pattern.compile("<?a(\\W*)href=\"http:/(/)(.*)\">");
 			String temp = doc.findWithinHorizon(p,0);
@@ -75,14 +75,14 @@ public class WebPages
 					docGraph.addEdge(temp, filename, 1);
 				}
 				//advance temp
-			 temp = doc.findWithinHorizon(p,0);
-			
+				temp = doc.findWithinHorizon(p,0);
+
 			}
-			
+
 		} catch (FileNotFoundException e) {
 		}
 	}
-	
+
 	public void printDepth(String word)
 	{
 		//get term depth in binary tree
